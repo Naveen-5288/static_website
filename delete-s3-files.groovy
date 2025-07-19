@@ -1,4 +1,4 @@
-# to delete files from s3
+// to delete files from s3
 pipeline {
     agent any
     environment {
