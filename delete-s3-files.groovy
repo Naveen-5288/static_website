@@ -10,7 +10,7 @@ pipeline {
         stage('Delete S3 Files') {
             steps {
                 // This will recursively delete all files inside the bucket
-                sh 'aws s3 rm s3://my-static-site-5288 --recursive'
+                bat 'aws s3 rm s3://my-static-site-5288 --recursive'
             }
         }
     }
