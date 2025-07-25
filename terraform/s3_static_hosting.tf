@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "static_site" {
-  bucket = "your-bucket-name"
+  bucket = "my_first_bucket"
   acl    = "public-read"
 
   website {
