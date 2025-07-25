@@ -3,18 +3,27 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "static_site" {
-  bucket = "static-website-bucket-01"  # MUST be globally unique
-  acl    = "public-read"
+  bucket = "static-website-bucket-01"  # Must be globally unique
 
   website {
     index_document = "index.html"
-    //error_document = "error.html"     # Optional but recommended
+    error_document = "error.html"
   }
 
   tags = {
     Name        = "StaticWebsiteBucket"
     Environment = "Dev"
   }
+}
+
+# Disable the default public access block (optional if already disabled in console)
+resource "aws_s3_bucket_public_access_block" "allow_public" {
+  bucket = aws_s3_bucket.static_site.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 }
 
 resource "aws_s3_bucket_policy" "public_policy" {
@@ -24,10 +33,10 @@ resource "aws_s3_bucket_policy" "public_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow",
+        Effect    = "Allow",
         Principal = "*",
-        Action = ["s3:GetObject"],
-        Resource = "${aws_s3_bucket.static_site.arn}/*"
+        Action    = ["s3:GetObject"],
+        Resource  = "${aws_s3_bucket.static_site.arn}/*"
       }
     ]
   })
