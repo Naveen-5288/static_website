@@ -1,4 +1,4 @@
 variable "bucket_name" {
-  description = "my-static-website-naveen2025"
+  description = "give bucket name"
   type        = string
 }
