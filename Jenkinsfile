@@ -36,7 +36,7 @@ pipeline {
     }
     stage('Upload HTML') {
       steps {
-        bat 'aws s3 cp index.html s3://${bucket_name}/'
+        bat 'aws s3 cp index.html s3://naveen-static-website-2025/'
       }
     }
   }
