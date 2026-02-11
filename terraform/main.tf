@@ -3,32 +3,53 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "static_site" {
-  bucket = "static-website-bucket-01"  # MUST be globally unique
-  acl    = "public-read"
-
-  website {
-    index_document = "index.html"
-    //error_document = "error.html"     # Optional but recommended
-  }
+  bucket = "my-first-static-site-unique-12345"
 
   tags = {
-    Name        = "StaticWebsiteBucket"
+    Name        = "Static Website Bucket"
     Environment = "Dev"
   }
+}
+
+resource "aws_s3_bucket_website_configuration" "static_site" {
+  bucket = aws_s3_bucket.static_site.id
+
+  index_document {
+    suffix = "index.html"
+  }
+}
+
+resource "aws_s3_bucket_ownership_controls" "static_site" {
+  bucket = aws_s3_bucket.static_site.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "static_site" {
+  bucket = aws_s3_bucket.static_site.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 }
 
 resource "aws_s3_bucket_policy" "public_policy" {
   bucket = aws_s3_bucket.static_site.id
 
+  depends_on = [
+    aws_s3_bucket_public_access_block.static_site
+  ]
+
   policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = "*",
-        Action = ["s3:GetObject"],
-        Resource = "${aws_s3_bucket.static_site.arn}/*"
-      }
-    ]
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = "*"
+      Action   = ["s3:GetObject"]
+      Resource = "${aws_s3_bucket.static_site.arn}/*"
+    }]
   })
 }
