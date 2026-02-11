@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Naveen-5288/mini-project-01.git'
+                git clone'https://github.com/Naveen-5288/mini-project-01.git'
             }
         }
 
