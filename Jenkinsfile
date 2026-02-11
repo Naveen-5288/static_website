@@ -9,7 +9,7 @@ pipeline {
     stage('Clone Repo') {
       steps {
         git branch: 'test',
-        git 'https://github.com/Naveen-5288/static_website.git'
+        url: 'https://github.com/Naveen-5288/static_website.git'
       }
     }
     stage('Terraform Init') {
